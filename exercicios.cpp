@@ -1,3 +1,5 @@
+// exercicios da lista https://www.ime.usp.br/~macmulti/exercicios/inteiros/index.html
+
 #include <stdio.h>
 
 int ex1(){
@@ -33,7 +35,7 @@ int ex2(){
     return 0;
 }
 
-int main() {
+int ex3() {
     int n, i, output;
     printf("Insira n:\n");
     scanf("%d", &n); // Nao esquecer do &!!!
@@ -46,5 +48,23 @@ int main() {
         i = i + 1;
     }
 
+    return 0;
+}
+
+int main() {
+    int x, n, i, potencia;
+    printf("Input x:\n");
+    scanf("%d", &x);
+    printf("Input n:\n");
+    scanf("%d", &n);
+
+    i = 0;
+    potencia = 1;
+    while (i != n){
+        potencia = potencia * x;
+        i = i + 1;
+    }
+
+    printf("x^n: %d", potencia);
     return 0;
 }
