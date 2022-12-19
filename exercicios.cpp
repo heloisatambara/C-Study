@@ -51,7 +51,7 @@ int ex3() {
     return 0;
 }
 
-int main() {
+int ex4() {
     int x, n, i, potencia;
     printf("Input x:\n");
     scanf("%d", &x);
@@ -67,4 +67,24 @@ int main() {
 
     printf("x^n: %d", potencia);
     return 0;
+}
+
+int main(){
+    int ex;
+    printf("Escolha qual exercicio testar: ");
+    scanf("%d", &ex);
+    while ( ex != 0) {
+        if (ex == 1) {
+            ex1();
+        }
+        else if (ex == 2) {
+            ex2();
+        }
+        else if (ex == 3) {
+            ex3();
+        }
+        else if (ex == 4) {
+            ex4();
+        }
+    }
 }
