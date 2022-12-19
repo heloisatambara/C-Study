@@ -1,6 +1,8 @@
-#include<stdio.h>
+#include <iostream>
+
+using namespace std;
 
 int main() {
-    printf("Hi World!");
+    cout << "Hey world" << endl;
     return 0;
 }
