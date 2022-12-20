@@ -1,6 +1,8 @@
 // exercicios da lista https://www.ime.usp.br/~macmulti/exercicios/inteiros/index.html
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
 
 int ex1(){
     int numero,
@@ -94,31 +96,62 @@ int ex25()
   return 0;
 }
 
+int ex11(){
+        setlocale(LC_ALL, "");
+
+    int n, zeros, i, aux;
+    printf("\nDigite um número: ");
+    scanf("%d", &n);
+
+    zeros = 0;
+    i = 1;
+    while ((i<=n)&&(zeros <= 2)) {
+        aux = n % i;
+        if (aux == 0) {
+            zeros++;
+        }
+        i++;
+    }
+
+    if (zeros == 2) {
+        printf("\n%d é primo", n);
+    }
+    else {
+        printf("\n%d não é primo", n);
+    }
+
+    return 0;
+}
+
 int main(){
     int ex;
-    printf("Escolha qual exercicio testar: ");
-    scanf("%d", &ex);
+    
+    
     while ( ex != 0) {
-        switch (ex)
-        {
-        case 1:
-            ex1();
-            break;
-        case 2:
-            ex2();
-            break;
-        case 3:
-            ex3();
-            break;
-        case 4:
-            ex4();
-            break;
-        case 25:
-            ex25();
-            break;
-        
-        default:0;
-            break;
-        }
+        printf("\nEscolha qual exercicio testar: ");
+        scanf("%d", &ex);
+        switch (ex) {
+            case 1:
+                ex1();
+                break;
+            case 2:
+                ex2();
+                break;
+            case 3:
+                ex3();
+                break;
+            case 4:
+                ex4();
+                break;
+            case 11:
+                ex11();
+                break;
+            case 25:
+                ex25();
+                break;
+            
+            default:0;
+                break;
+            }
     }
 }
