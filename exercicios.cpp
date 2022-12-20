@@ -99,20 +99,26 @@ int main(){
     printf("Escolha qual exercicio testar: ");
     scanf("%d", &ex);
     while ( ex != 0) {
-        if (ex == 1) {
+        switch (ex)
+        {
+        case 1:
             ex1();
-        }
-        else if (ex == 2) {
+            break;
+        case 2:
             ex2();
-        }
-        else if (ex == 3) {
+            break;
+        case 3:
             ex3();
-        }
-        else if (ex == 4) {
+            break;
+        case 4:
             ex4();
-        }
-        else if (ex == 25) {
+            break;
+        case 25:
             ex25();
+            break;
+        
+        default:0;
+            break;
         }
     }
 }
