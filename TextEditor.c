@@ -2,94 +2,92 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
-#include <fstream>
-#include <string>
-#include <iostream>
 
-void insereString(char string) {
+void insereString(char string[50]) {
 
 }
-void carregaArquivo(char nome, char texto) {
-    int c, i = 0;
+char * carregaArquivo(char nome[50]) {
+    int cont = 0;
+    char c, texto[200];
 
     // abre arquivo
-    FILE *file
-    file = fopen(nome, "r+")
+    FILE *file = fopen("C:/USP/texto.txt", "r");
 
     // guarda o conteudo do texto no arquivo na string
-    if (file) {
-        do {
-            c = getc(file);
-            texto[i] = c;
-            i++;
-        } while (c != EOF)
-
-        fclose(file);
+     if (NULL == file) {
+        printf("file can't be opened \n");
     }
-}
-void escreveNoArquivo(char nome) {
+    do {
+        c = fgetc(file);
+        printf("%c", c);
+        texto[cont] = c;
+        cont++;
+    } while (c != EOF);
+        
+    fclose(file);
 
+    return texto;
 }
-void cursorFrente() {
+// void escreveNoArquivo(char nome) {
 
-}
-void cursorTras() {
+// }
+// void cursorFrente() {
 
-}
-void cursorInicio() {
+// }
+// void cursorTras() {
 
-}
-void cursorProximaPalavra() {
+// }
+// void cursorInicio() {
 
-}
-void cursorAtualPalavra() {
+// }
+// void cursorProximaPalavra() {
 
-}
-void cursorFimLinha() {
+// }
+// void cursorAtualPalavra() {
 
-}
-void cursorFim() {
+// }
+// void cursorFimLinha() {
 
-}
-void cursorLinha(int x) {
+// }
+// void cursorFim() {
 
-}
-void apaga() {
+// }
+// void cursorLinha(int x) {
 
-}
-void marcarCursor() {
+// }
+// void apaga() {
 
-}
-void inserePilha() {
+// }
+// void marcarCursor() {
 
-}
-void empilha() {
+// }
+// void inserePilha() {
 
-}
-void empilhaApaga() {
+// }
+// void empilha() {
 
-}
-void busca(char string) {
+// }
+// void empilhaApaga() {
 
-}
-void substitui(char string1, char string2) {
+// }
+// void busca(char string) {
 
-}
-void quebraLinha() {
+// }
+// //void substitui(char string1, char string2) {
 
-}
-void juntaLinha() {
+// //}
+// void juntaLinha() {
 
-}
-void proximaLinha() {
+// }
+// void proximaLinha() {
 
-}
-void anteriorLinha() {
+// }
+// void anteriorLinha() {
 
-}
-void exibePilha() {
+// }
+// void exibePilha() {
 
-}
+// }
 
 
 void main() {
@@ -98,7 +96,8 @@ void main() {
 
     // criar variaveis
     int linha = 0, coluna = 0, i = 0, x = 0, j = 0;
-    char input[50], texto[200], n[49], s[49], r[49];
+    char input[50], n[50], s[50], r[50];
+    char* texto;
 
     // recebe os comandos e chama as funcoes correspondentes
     while (input[0] != '!') {
@@ -110,79 +109,87 @@ void main() {
         // percorre o input para executar os comandos
         while (input[i]!='\0') {
             switch(input[i]){
-                case 'I':
-                    cpst
-                    insereString(s);
-                    break;
+                // case 'I':
+                //     insereString(s);
+                //     break;
                 case 'A':
-                    carregaArquivo(n, texto);
+                    strcpy(n, input+(i+1));
+                    
+                    char* texto = carregaArquivo(n);
+                    
+                    printf("%s",texto);
                     break;
-                case 'E':
-                    escreveNoArquivo(n);
-                    break;
-                case 'F':
-                    cursorFrente();
-                    break;
-                case 'T':
-                    cursorTras();
-                    break;
-                case 'O':
-                    cursorInicio();
-                    break;
-                case 'P':
-                    cursorProximaPalavra();
-                    break;
-                case 'Q':
-                    cursorAtualPalavra();
-                    break;
-                case '$':
-                    cursorFimLinha();
-                    break;
-                case ':':
-                    if (input[i+1]=='F') {
-                        cursorFim();
-                    } else {
-                        cursorLinha(x);
-                    }
-                    break;
-                case 'D':
-                    apaga();
-                    break;
-                case 'M':
-                    marcarCursor();
-                    break;
-                case 'V':
-                    inserePilha();
-                    break;
-                case 'C':
-                    empilha();
-                    break;
-                case 'X':
-                    empilhaApaga();
-                    break;
-                case 'B':
-                    busca(s);
-                    break;
-                case 'S':
-                    substitui(s, r);
-                    break;
-                case 'N':
-                    quebraLinha();
-                    break;
-                case 'U':
-                    juntaLinha();
-                    break;
+                // case 'E':
+                //     strcpy(n, input+(i+1));
+                //     escreveNoArquivo(n, texto);
+                //     break;
+                // case 'F':
+                //     cursorFrente();
+                //     break;
+                // case 'T':
+                //     cursorTras();
+                //     break;
+                // case 'O':
+                //     cursorInicio();
+                //     break;
+                // case 'P':
+                //     cursorProximaPalavra();
+                //     break;
+                // case 'Q':
+                //     cursorAtualPalavra();
+                //     break;
+                // case '$':
+                //     cursorFimLinha();
+                //     break;
+                // case ':':
+                //     if (input[i+1]=='F') {
+                //         cursorFim();
+                //     } else {
+                //        strcpy(x, input+(i+1));
+                //         cursorLinha(x);
+                //     }
+                //     break;
+                // case 'D':
+                //     apaga();
+                //     break;
+                // case 'M':
+                //     marcarCursor();
+                //     break;
+                // case 'V':
+                //     inserePilha();
+                //     break;
+                // case 'C':
+                //     empilha();
+                //     break;
+                // case 'X':
+                //     empilhaApaga();
+                //     break;
+                // case 'B':
+                //     strcpy(n, input+(i+1));
+                //     busca(s);
+                //     break;
+                // case 'S':
+                //       strcpy(n, input+(i+1));
+                // dividir a string em /
+                //       substitui(s, r);
+                //     break;
+                // case 'N':
+                //     insereString('\n');
+                //     break;
+                // case 'U':
+                //     juntaLinha();
+                //     break;
                 case '!':
                     break;
-                case 'J':
-                    proximaLinha();
-                    break;
-                case 'H':
-                    anteriorLinha();
-                    break;
-                case 'Z':
-                    exibePilha();
-                    break;
+                // case 'J':
+                //     proximaLinha();
+                //     break;
+                // case 'H':
+                //     anteriorLinha();
+                //     break;
+                // case 'Z':
+                //     exibePilha();
+                //     break;
                 default:
                     break;
             }
@@ -194,4 +201,6 @@ void main() {
             i++;
         }
     }
+
+    free(texto);
 }
