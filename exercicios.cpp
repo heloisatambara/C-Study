@@ -97,8 +97,6 @@ int ex25()
 }
 
 int ex11(){
-        setlocale(LC_ALL, "");
-
     int n, zeros, i, aux;
     printf("\nDigite um número: ");
     scanf("%d", &n);
@@ -124,9 +122,8 @@ int ex11(){
 }
 
 int main(){
+    setlocale(LC_ALL, "");
     int ex;
-    
-    
     while ( ex != 0) {
         printf("\nEscolha qual exercicio testar: ");
         scanf("%d", &ex);
