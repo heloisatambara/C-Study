@@ -79,7 +79,7 @@ char * carregaArquivo(char * n) {
 // }
 
 int imprimeLinha(char *s, int linha, bool imprimir) {
-    int i = 0, j = 0, tamanhoDaLinha = 0;
+    int i = 0, j = 0, tamanhoDaLinha = -1;
     while (s[i] != '\0' && j <= linha) {
         if (s[i] == '\n') {
             j++;
@@ -89,9 +89,8 @@ int imprimeLinha(char *s, int linha, bool imprimir) {
                 putchar(s[i]);
             }
             tamanhoDaLinha++;
-            i++;
         }
-        
+        i++;
     }
     putchar('\n');
 
@@ -135,8 +134,8 @@ void main() {
                     texto = carregaArquivo(input + j);
                     break;
                 // case 'E':
-                //     strcpy(n, input+(i+1));
-                //     escreveNoArquivo(n, texto);
+                //    j = i + 1
+                //     escreveNoArquivo(input + j, texto);
                 //     break;
                 case 'F':
                     coluna++;
@@ -198,13 +197,18 @@ void main() {
                     break;
                 case 'J':
                     linha++;
+                    tamanhoDaLinha = imprimeLinha(texto, linha, false);
                     if (coluna > tamanhoDaLinha) {
                         coluna = tamanhoDaLinha;
-                    }
+                    };
                     break;
-                // case 'H':
-                //     anteriorLinha();
-                //     break;
+                case 'H':
+                    linha--;
+                    tamanhoDaLinha = imprimeLinha(texto, linha, false);
+                    if (coluna > tamanhoDaLinha) {
+                        coluna = tamanhoDaLinha;
+                    };
+                    break;
                 // case 'Z':
                 //     exibePilha();
                 //     break;
@@ -219,7 +223,7 @@ void main() {
             i++;
         }
 
-        tamanhoDaLinha = imprimeLinha(texto, linha, True);
+        tamanhoDaLinha = imprimeLinha(texto, linha, true);
         imprimeCursor(coluna);
     }
 
