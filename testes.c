@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main() {
+int abre(char n[20]) {
     int cont = 0;
     char c;
    // char texto[100];
-
     // abre arquivo
-    FILE *file = fopen("C:/USP/C++Studies/C-Study/C-Study/texto.txt.txt", "r");
+    FILE *file = fopen(n, "r");
 
     // guarda o conteudo do texto no arquivo na string
      if (NULL == file) {
@@ -25,4 +24,14 @@ int main() {
 
 
     return 0;
+}
+
+void main() {
+    int i;
+    char d[20], n[20] = "AC:/USP/texto.txt";
+    strcpy(d, n+1);
+    for (i = 0; i<=20; i++) {
+        printf("%c", d[i]);
+    }
+    abre(n+1);
 }

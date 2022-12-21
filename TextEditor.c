@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <string.h>
 
 void insereString(char string[50]) {
 
 }
-char * carregaArquivo(char nome[50]) {
+char * carregaArquivo(char * n) {
     int cont = 0;
-    char c, texto[200];
+    char c;
+    static char texto[200];
 
     // abre arquivo
-    FILE *file = fopen("C:/USP/texto.txt", "r");
+    printf("%s", n);
+     FILE *file = fopen("C:/USP/texto.txt", "r");
 
     // guarda o conteudo do texto no arquivo na string
      if (NULL == file) {
@@ -20,8 +21,8 @@ char * carregaArquivo(char nome[50]) {
     do {
         c = fgetc(file);
         printf("%c", c);
-        texto[cont] = c;
-        cont++;
+//         texto[cont] = c;
+    //       cont++;
     } while (c != EOF);
         
     fclose(file);
@@ -91,8 +92,6 @@ char * carregaArquivo(char nome[50]) {
 
 
 void main() {
-    // para possibilitar o uso de acentos
-    setlocale(LC_ALL, "");
 
     // criar variaveis
     int linha = 0, coluna = 0, i = 0, x = 0, j = 0;
@@ -113,9 +112,9 @@ void main() {
                 //     insereString(s);
                 //     break;
                 case 'A':
-                    strcpy(n, input+(i+1));
+                    j = i + 1;
                     
-                    char* texto = carregaArquivo(n);
+                    char* texto = carregaArquivo(input + 1);
                     
                     printf("%s",texto);
                     break;
