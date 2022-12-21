@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 void insereString(char string[50]) {
 
@@ -30,16 +31,11 @@ char * carregaArquivo(char * n) {
 // void escreveNoArquivo(char nome) {
 
 // }
-// void cursorInicio() {
 
-// }
 // void cursorProximaPalavra() {
 
 // }
 // void cursorAtualPalavra() {
-
-// }
-// void cursorFimLinha() {
 
 // }
 // void cursorFim() {
@@ -82,19 +78,31 @@ char * carregaArquivo(char * n) {
 
 // }
 
-void imprimeLinha(char *s) {
-    int i = 0;
-    while (s[i] != '\n' && s[i] != '\0') {
-        putchar(s[i]);
-        i++;
+int imprimeLinha(char *s, int linha, bool imprimir) {
+    int i = 0, j = 0, tamanhoDaLinha = 0;
+    while (s[i] != '\0' && j <= linha) {
+        if (s[i] == '\n') {
+            j++;
+        }
+        if (j == linha) {
+            if (imprimir) {
+                putchar(s[i]);
+            }
+            tamanhoDaLinha++;
+            i++;
+        }
+        
     }
     putchar('\n');
+
+    return tamanhoDaLinha;
 }
 
 void imprimeCursor(int coluna) {
-    int i = 0;
-    for (i = 1; i < coluna; i++) {
+    int i=0;
+    while (i < coluna) {
         putchar(' ');
+        i++;
     }
     putchar('^');
 
@@ -104,7 +112,7 @@ void imprimeCursor(int coluna) {
 void main() {
 
     // criar variaveis
-    int linha = 0, coluna = 0, i = 0, x = 0, j = 0;
+    int linha = 0, coluna = 0, i = 0, x = 0, j = 0, tamanhoDaLinha;
     char input[50], n[50], s[50], r[50];
     char* texto, * token;
 
@@ -116,6 +124,7 @@ void main() {
         // printf(" <ENTER>");
         
         // percorre o input para executar os comandos
+        i = 0;
         while (input[i]!='\0') {
             switch(input[i]){
                 // case 'I':
@@ -135,18 +144,18 @@ void main() {
                 case 'T':
                     coluna--;
                     break;
-                // case 'O':
-                //     cursorInicio();
-                //     break;
+                case 'O':
+                    coluna = 0;
+                    break;
                 // case 'P':
                 //     cursorProximaPalavra();
                 //     break;
                 // case 'Q':
                 //     cursorAtualPalavra();
                 //     break;
-                // case '$':
-                //     cursorFimLinha();
-                //     break;
+                case '$':
+                    coluna = tamanhoDaLinha;
+                    break;
                 // case ':':
                 //     if (input[i+1]=='F') {
                 //         cursorFim();
@@ -187,9 +196,12 @@ void main() {
                 //     break;
                 case '!':
                     break;
-                // case 'J':
-                //     proximaLinha();
-                //     break;
+                case 'J':
+                    linha++;
+                    if (coluna > tamanhoDaLinha) {
+                        coluna = tamanhoDaLinha;
+                    }
+                    break;
                 // case 'H':
                 //     anteriorLinha();
                 //     break;
@@ -207,7 +219,7 @@ void main() {
             i++;
         }
 
-        imprimeLinha(texto);
+        tamanhoDaLinha = imprimeLinha(texto, linha, True);
         imprimeCursor(coluna);
     }
 
