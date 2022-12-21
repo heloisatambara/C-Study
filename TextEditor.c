@@ -11,7 +11,6 @@ char * carregaArquivo(char * n) {
     static char texto[200];
 
     // abre arquivo
-    printf("%s", n);
      FILE *file = fopen("C:/USP/texto.txt", "r");
 
     // guarda o conteudo do texto no arquivo na string
@@ -20,9 +19,8 @@ char * carregaArquivo(char * n) {
     }
     do {
         c = fgetc(file);
-        printf("%c", c);
-//         texto[cont] = c;
-    //       cont++;
+        texto[cont] = c;
+        cont++;
     } while (c != EOF);
         
     fclose(file);
@@ -30,12 +28,6 @@ char * carregaArquivo(char * n) {
     return texto;
 }
 // void escreveNoArquivo(char nome) {
-
-// }
-// void cursorFrente() {
-
-// }
-// void cursorTras() {
 
 // }
 // void cursorInicio() {
@@ -90,13 +82,31 @@ char * carregaArquivo(char * n) {
 
 // }
 
+void imprimeLinha(char *s) {
+    int i = 0;
+    while (s[i] != '\n' && s[i] != '\0') {
+        putchar(s[i]);
+        i++;
+    }
+    putchar('\n');
+}
+
+void imprimeCursor(int coluna) {
+    int i = 0;
+    for (i = 1; i < coluna; i++) {
+        putchar(' ');
+    }
+    putchar('^');
+
+}
+
 
 void main() {
 
     // criar variaveis
     int linha = 0, coluna = 0, i = 0, x = 0, j = 0;
     char input[50], n[50], s[50], r[50];
-    char* texto;
+    char* texto, * token;
 
     // recebe os comandos e chama as funcoes correspondentes
     while (input[0] != '!') {
@@ -113,21 +123,18 @@ void main() {
                 //     break;
                 case 'A':
                     j = i + 1;
-                    
-                    char* texto = carregaArquivo(input + 1);
-                    
-                    printf("%s",texto);
+                    texto = carregaArquivo(input + j);
                     break;
                 // case 'E':
                 //     strcpy(n, input+(i+1));
                 //     escreveNoArquivo(n, texto);
                 //     break;
-                // case 'F':
-                //     cursorFrente();
-                //     break;
-                // case 'T':
-                //     cursorTras();
-                //     break;
+                case 'F':
+                    coluna++;
+                    break;
+                case 'T':
+                    coluna--;
+                    break;
                 // case 'O':
                 //     cursorInicio();
                 //     break;
@@ -199,6 +206,9 @@ void main() {
 
             i++;
         }
+
+        imprimeLinha(texto);
+        imprimeCursor(coluna);
     }
 
     free(texto);
