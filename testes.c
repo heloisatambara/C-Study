@@ -5,9 +5,10 @@
 int abre(char n[20]) {
     int cont = 0, i;
     char c, texto[200];
+    char t[] = "ooooi moooço";
    // char texto[100];
     // abre arquivo
-    FILE *file = fopen(n, "r");
+    FILE *file = fopen(n, "r+");
 
     // guarda o conteudo do texto no arquivo na string
      if (NULL == file) {
@@ -19,12 +20,15 @@ int abre(char n[20]) {
         texto[cont] = c;
         cont++;
     } while (c != EOF);
-        
+
+    for (i = 0; i<=strlen(t); i++) {
+        fprintf(file, "%c", t[i]);
+    }   
+
+    
     fclose(file);
 
-    for (i = 0; i<=200; i++) {
-        printf("%c", texto[i]);
-    }
+    
     return 0;
 }
 

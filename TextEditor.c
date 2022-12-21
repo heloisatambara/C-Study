@@ -67,20 +67,53 @@ char * carregaArquivo(char * n) {
 
     return texto;
 }
-// void escreveNoArquivo(char * n) {
-
-// }
-
-// void cursorProximaPalavra() {
-
-// }
-// void cursorAtualPalavra() {
-
-// }
 
 
-void cursorFim() {
+void escreveNoArquivo(char * n, char * texto) {
+    fclose(fopen(n, "w")); ;// esvaziar o arquivo
 
+    FILE * file = fopen("C:/USP/texto.txt", "w");
+    fprintf(file, "%s", texto);
+    fclose(file);
+
+}
+
+int cursorProximaPalavra(char * texto, int linha, int coluna) {
+    int i, tamLinhas = 1;
+
+    while (i<linha) {
+        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
+        tamLinhas++; // caractere '\n' deve ser contado
+        i++;
+    }
+    tamLinhas = tamLinhas + coluna;
+
+    i = tamLinhas;
+    while (texto[i] != ' ') {
+        i++;
+    }
+    i++;
+
+    return i;
+}
+
+int cursorAtualPalavra(char * texto, int linha, int coluna) {
+    int i, tamLinhas = 1;
+
+    while (i<linha) {
+        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
+        tamLinhas++; // caractere '\n' deve ser contado
+        i++;
+    }
+    tamLinhas = tamLinhas + coluna;
+
+    i = tamLinhas;
+    while (texto[i] != ' ') {
+        i--;
+    }
+
+    i++;
+    return i;
 }
 
 
@@ -158,7 +191,7 @@ void main() {
 
     // criar variaveis
     int linha = 0, coluna = 0, i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1;
-    char input[50], s[50], r[50];
+    char input[50], s[50], r[50], pulaLinha[] = "\n ";
     char* texto, * token;
 
     // recebe os comandos e chama as funcoes correspondentes
@@ -182,10 +215,10 @@ void main() {
                     j = i + 1;
                     texto = carregaArquivo(input + j);
                     break;
-                // case 'E':
-                //    j = i + 1
-                //     escreveNoArquivo(input + j, texto);
-                //     break;
+                case 'E':
+                    j = i + 1;
+                    escreveNoArquivo(input + j, texto);
+                    break;
                 case 'F':
                     coluna++;
                     break;
@@ -195,12 +228,12 @@ void main() {
                 case 'O':
                     coluna = 0;
                     break;
-                // case 'P':
-                //     cursorProximaPalavra();
-                //     break;
-                // case 'Q':
-                //     cursorAtualPalavra();
-                //     break;
+                case 'P':
+                    coluna = cursorProximaPalavra(texto, linha, coluna);
+                    break;
+                case 'Q':
+                    coluna = cursorAtualPalavra(texto, linha, coluna);
+                    break;
                 case '$':
                     coluna = tamanhoDaLinha;
                     break;
@@ -248,7 +281,7 @@ void main() {
                 //       substitui(s, r);
                 //     break;
                 case 'N':
-                    insereString("\n ", linha, coluna, texto);
+                    insereString(pulaLinha, linha, coluna, texto);
                     break;
                 case 'U':
                     coluna = 0;
