@@ -75,9 +75,9 @@ char * carregaArquivo(char * n) {
 // void cursorAtualPalavra() {
 
 // }
-// void cursorFim() {
+void cursorFim() {
 
-// }
+}
 // void cursorLinha(int x) {
 
 // }
@@ -103,12 +103,6 @@ char * carregaArquivo(char * n) {
 
 // //}
 // void juntaLinha() {
-
-// }
-// void proximaLinha() {
-
-// }
-// void anteriorLinha() {
 
 // }
 // void exibePilha() {
@@ -178,14 +172,16 @@ void main() {
                 case '$':
                     coluna = tamanhoDaLinha;
                     break;
-                // case ':':
-                //     if (input[i+1]=='F') {
-                //         cursorFim();
-                //     } else {
-                //        j = i + 1
-                //         cursorLinha(input + j);
-                //     }
-                //     break;
+                case ':':
+                    if (input[i+1]=='F') {
+                        cursorFim();
+                    } else {
+                        char aux[50];
+                        strcpy(aux, input+j);
+                        aux[strlen(aux)-1] = '\0';
+                        linha = atoi(aux);
+                    }
+                    break;
                 // case 'D':
                 //     apaga();
                 //     break;
