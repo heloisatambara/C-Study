@@ -3,8 +3,8 @@
 #include <string.h>
 
 int abre(char n[20]) {
-    int cont = 0;
-    char c;
+    int cont = 0, i;
+    char c, texto[200];
    // char texto[100];
     // abre arquivo
     FILE *file = fopen(n, "r");
@@ -16,13 +16,15 @@ int abre(char n[20]) {
     do {
         c = fgetc(file);
         printf("%c", c);
-//         texto[cont] = c;
-    //       cont++;
+        texto[cont] = c;
+        cont++;
     } while (c != EOF);
         
     fclose(file);
 
-
+    for (i = 0; i<=200; i++) {
+        printf("%c", texto[i]);
+    }
     return 0;
 }
 
@@ -30,8 +32,6 @@ void main() {
     int i;
     char d[20], n[20] = "AC:/USP/texto.txt";
     strcpy(d, n+1);
-    for (i = 0; i<=20; i++) {
-        printf("%c", d[i]);
-    }
+    
     abre(n+1);
 }

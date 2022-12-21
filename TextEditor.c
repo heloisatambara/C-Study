@@ -22,18 +22,20 @@ int imprimeLinha(char *texto, int linha, bool imprimir) {
     return tamanhoDaLinha;
 }
 
-void insereString(char * string, int linha, int coluna, char * texto) {
+void insereString(char string[50], int linha, int coluna, char * texto) {
     char aux[200];
-    int i = 0, tamLinhas = coluna, tamString;
+    int i = 0, tamLinhas = 1;
 
     // retira \n da string
     string[strlen(string)-1] = '\0';
     
     // calcula tamanho do texto até onde a string será inserida
     while (i<linha) {
-        tamLinhas = tamLinhas + imprimeLinha(texto, linha, false);
+        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
+        tamLinhas++; // caractere '\n' deve ser contado
         i++;
     }
+    tamLinhas = tamLinhas + coluna;
 
     aux[tamLinhas] = '\0';
     strncpy(aux, texto, tamLinhas);
@@ -65,7 +67,7 @@ char * carregaArquivo(char * n) {
 
     return texto;
 }
-// void escreveNoArquivo(char nome) {
+// void escreveNoArquivo(char * n) {
 
 // }
 
@@ -75,18 +77,31 @@ char * carregaArquivo(char * n) {
 // void cursorAtualPalavra() {
 
 // }
+
+
 void cursorFim() {
 
 }
-// void cursorLinha(int x) {
 
-// }
-// void apaga() {
 
-// }
-// void marcarCursor() {
+void apaga(int linha, int coluna, char * texto) {
+    int i = 0, tamLinhas = 1, size;
+    char aux[200];
 
-// }
+    // calcula tamanho do texto até onde o caractere será apagado
+    while (i<linha) {
+        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
+        tamLinhas++; // caractere '\n' deve ser contado
+        i++;
+    }
+    tamLinhas = tamLinhas + coluna;
+
+    aux[tamLinhas] = '\0';
+    strncpy(aux, texto, tamLinhas);
+    strcat(aux, texto + (tamLinhas+1));
+    strcpy(texto, aux);
+}
+
 // void inserePilha() {
 
 // }
@@ -111,21 +126,38 @@ void cursorFim() {
 
 
 
-void imprimeCursor(int coluna) {
+void imprimeCursor(int coluna, int M) {
     int i=0;
     while (i < coluna) {
-        putchar(' ');
+        if (i == M) {
+            putchar('M');
+        } else {
+            putchar(' ');
+        }
+       
         i++;
     }
     putchar('^');
 
 }
 
+int quantasLinhas(char * texto) {
+    int i = 0, j = 0;
+    while (texto[i] != EOF) {
+        if (texto[i] == '\n') {
+            j++;
+        }
+        i++;
+    }
+
+    return j;
+}
+
 
 void main() {
 
     // criar variaveis
-    int linha = 0, coluna = 0, i = 0, j = 0, tamanhoDaLinha, stringLen;
+    int linha = 0, coluna = 0, i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1;
     char input[50], s[50], r[50];
     char* texto, * token;
 
@@ -174,20 +206,29 @@ void main() {
                     break;
                 case ':':
                     if (input[i+1]=='F') {
-                        cursorFim();
+                        int maxLinhas = quantasLinhas(texto);
+                        linha = maxLinhas;
+                        tamanhoDaLinha = imprimeLinha(texto, linha, false);
+                        coluna = tamanhoDaLinha;
                     } else {
                         char aux[50];
                         strcpy(aux, input+j);
                         aux[strlen(aux)-1] = '\0';
                         linha = atoi(aux);
+                        if (coluna > tamanhoDaLinha) {
+                            coluna = tamanhoDaLinha;
+                        };
                     }
                     break;
-                // case 'D':
-                //     apaga();
-                //     break;
-                // case 'M':
-                //     marcarCursor();
-                //     break;
+                case 'D':
+                    apaga(linha, coluna, texto);
+                    if (coluna > tamanhoDaLinha) {
+                            coluna = tamanhoDaLinha;
+                    };
+                    break;
+                case 'M':
+                    M = coluna;
+                    break;
                 // case 'V':
                 //     inserePilha();
                 //     break;
@@ -206,12 +247,13 @@ void main() {
                 //       strtok(s, '/')
                 //       substitui(s, r);
                 //     break;
-                // case 'N':
-                //     insereString('\n');
-                //     break;
-                // case 'U':
-                //     juntaLinha();
-                //     break;
+                case 'N':
+                    insereString("\n ", linha, coluna, texto);
+                    break;
+                case 'U':
+                    coluna = 0;
+                    apaga(linha, coluna-1, texto);
+                    break;
                 case '!':
                     break;
                 case 'J':
@@ -243,7 +285,7 @@ void main() {
         }
 
         tamanhoDaLinha = imprimeLinha(texto, linha, true);
-        imprimeCursor(coluna);
+        imprimeCursor(coluna, M);
     }
 
     free(texto);
