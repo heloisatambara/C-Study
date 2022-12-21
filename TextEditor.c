@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#define tamanhoPilha 10
+char * pilha[tamanhoPilha] = {0, 0, 0, 0, 0, 0, 0, 0, 0 ,0};
+char texto[200];
+int coluna = 0, linha = 0;
 
 int imprimeLinha(char *texto, int linha, bool imprimir) {
     int i = 0, j = 0, tamanhoDaLinha = -1;
@@ -22,14 +26,24 @@ int imprimeLinha(char *texto, int linha, bool imprimir) {
     return tamanhoDaLinha;
 }
 
-void insereString(char string[50], int linha, int coluna, char * texto) {
-    char aux[200];
-    int i = 0, tamLinhas = 1;
+void imprimeCursor(int coluna, int M) {
+    int i=0;
+    while (i < coluna) {
+        if (i == M) {
+            putchar('M');
+        } else {
+            putchar(' ');
+        }
+       
+        i++;
+    }
+    putchar('^');
 
-    // retira \n da string
-    string[strlen(string)-1] = '\0';
-    
-    // calcula tamanho do texto até onde a string será inserida
+}
+
+int posicaoNaString(int coluna, int linha, char * texto) {
+    int i = 0, tamLinhas = 0;
+
     while (i<linha) {
         tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
         tamLinhas++; // caractere '\n' deve ser contado
@@ -37,21 +51,42 @@ void insereString(char string[50], int linha, int coluna, char * texto) {
     }
     tamLinhas = tamLinhas + coluna;
 
-    aux[tamLinhas] = '\0';
-    strncpy(aux, texto, tamLinhas);
+    return tamLinhas;
+}
+
+
+void insereString(char string[50], int linha, int coluna, char * texto) {
+    char aux[200];
+    int i = 0, posString;
+
+    // retira \n da string
+     if (string[strlen(string)-1] == '\n') {
+
+        string[strlen(string)-1] = '\0';
+    }
+    
+    // calcula tamanho do texto até onde a string será inserida
+    posString = posicaoNaString(coluna, linha, texto);
+    posString++;
+
+    aux[posString] = '\0';
+    strncpy(aux, texto, posString);
     strcat(aux, string);
-    strcat(aux, texto + tamLinhas);
+    strcat(aux, texto + posString);
     strcpy(texto, aux);
 }
 
 
-char * carregaArquivo(char * n) {
+char * carregaArquivo(char n[50]) {
     int cont = 0;
     char c;
-    static char texto[200];
+     // retira \n da string
+     if (n[strlen(n)-1] == '\n') {
 
-    // abre arquivo
-     FILE *file = fopen("C:/USP/texto.txt", "r");
+        n[strlen(n)-1] = '\0';
+    }
+
+     FILE *file = fopen(n, "r");
 
     // guarda o conteudo do texto no arquivo na string
      if (NULL == file) {
@@ -69,26 +104,26 @@ char * carregaArquivo(char * n) {
 }
 
 
-void escreveNoArquivo(char * n, char * texto) {
+void escreveNoArquivo(char n[50], char * texto) {
+      if (n[strlen(n)-1] == '\n') {
+
+        n[strlen(n)-1] = '\0';
+    }
+
     fclose(fopen(n, "w")); ;// esvaziar o arquivo
 
-    FILE * file = fopen("C:/USP/texto.txt", "w");
+    FILE * file = fopen(n, "w");
     fprintf(file, "%s", texto);
     fclose(file);
 
 }
 
 int cursorProximaPalavra(char * texto, int linha, int coluna) {
-    int i, tamLinhas = 1;
+    int i, posString;
 
-    while (i<linha) {
-        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
-        tamLinhas++; // caractere '\n' deve ser contado
-        i++;
-    }
-    tamLinhas = tamLinhas + coluna;
+    posString = posicaoNaString(coluna, linha, texto);
 
-    i = tamLinhas;
+    i = posString + 1;
     while (texto[i] != ' ') {
         i++;
     }
@@ -98,16 +133,11 @@ int cursorProximaPalavra(char * texto, int linha, int coluna) {
 }
 
 int cursorAtualPalavra(char * texto, int linha, int coluna) {
-    int i, tamLinhas = 1;
+    int i, posString;
 
-    while (i<linha) {
-        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
-        tamLinhas++; // caractere '\n' deve ser contado
-        i++;
-    }
-    tamLinhas = tamLinhas + coluna;
+    posString = posicaoNaString(coluna, linha, texto);
 
-    i = tamLinhas;
+    i = posString + 1;
     while (texto[i] != ' ') {
         i--;
     }
@@ -118,61 +148,107 @@ int cursorAtualPalavra(char * texto, int linha, int coluna) {
 
 
 void apaga(int linha, int coluna, char * texto) {
-    int i = 0, tamLinhas = 1, size;
+    int i = 0, posString, size;
     char aux[200];
 
-    // calcula tamanho do texto até onde o caractere será apagado
-    while (i<linha) {
-        tamLinhas = tamLinhas + imprimeLinha(texto, i, false);
-        tamLinhas++; // caractere '\n' deve ser contado
-        i++;
-    }
-    tamLinhas = tamLinhas + coluna;
+    posString = posicaoNaString(coluna, linha, texto);
 
-    aux[tamLinhas] = '\0';
-    strncpy(aux, texto, tamLinhas);
-    strcat(aux, texto + (tamLinhas+1));
+    posString++;
+
+    aux[posString] = '\0';
+    strncpy(aux, texto, posString);
+    strcat(aux, texto + (posString+1));
     strcpy(texto, aux);
 }
 
 // void inserePilha() {
 
 // }
-// void empilha() {
 
-// }
+void empilha(int M, int coluna, int linha, char * texto) {
+    int i = 0;
+    char stringMarcada[200];
+    bool empilhado;
+
+    strncpy(stringMarcada, texto+(posicaoNaString(M, linha, texto)),(posicaoNaString(coluna, linha, texto)));
+
+    while (i<tamanhoPilha) {
+        if (!pilha[i]) {
+            pilha[i] = stringMarcada;
+
+            empilhado = true;
+            break;
+        } 
+        printf("%s\n", pilha[i]);
+        
+        i++;
+    }
+
+    if (!empilhado) {
+        printf("A pilha esta cheia");
+    }
+}
 // void empilhaApaga() {
 
 // }
-// void busca(char string) {
+int busca(char * string, char * texto) {
+    if (string[strlen(string)-1] == '\n') {
 
-// }
-// //void substitui(char string1, char string2) {
-
-// //}
-// void juntaLinha() {
-
-// }
-// void exibePilha() {
-
-// }
+        string[strlen(string)-1] = '\0';
+    }
+    
+    char * findString = strstr(texto, string);
+    int pos = findString - texto;
+    return pos;
+}
 
 
+bool substitui(char * string1, char * string2) {
+     if (string2[strlen(string2)-1] == '\n') {
+        string2[strlen(string2)-1] = '\0';
+    }
+    
+    int pos = busca(string1, texto);
 
-void imprimeCursor(int coluna, int M) {
-    int i=0;
-    while (i < coluna) {
-        if (i == M) {
-            putchar('M');
-        } else {
-            putchar(' ');
+    if (pos<0) {
+        return false;
+    }
+
+        int coluna = -1, linha = 0, k=0;
+
+        while (k<=pos) {
+            if (texto[k] == '\n') {
+                coluna = -1;
+                linha++;
+            }
+            coluna++;
+            k++;
         }
-       
+        coluna--;
+
+        k = 0;
+        while (k<strlen(string1)) {
+            apaga(linha, coluna, texto);
+            k++;
+        }
+
+        
+        insereString(string2, linha, coluna, texto);
+    return true;
+}
+
+void exibePilha() {
+    int i = 0;
+    
+    while (i<tamanhoPilha) {
+        if (pilha[i]) {
+            printf("%s\n", pilha[i]);
+        }
+        
         i++;
     }
-    putchar('^');
-
 }
+
 
 int quantasLinhas(char * texto) {
     int i = 0, j = 0;
@@ -190,9 +266,9 @@ int quantasLinhas(char * texto) {
 void main() {
 
     // criar variaveis
-    int linha = 0, coluna = 0, i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1;
-    char input[50], s[50], r[50], pulaLinha[] = "\n ";
-    char* texto, * token;
+    int i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1;
+    char input[50], r[50], pulaLinha[] = "\n ";
+    char *token, *n;
 
     // recebe os comandos e chama as funcoes correspondentes
     while (input[0] != '!') {
@@ -212,8 +288,8 @@ void main() {
                     coluna = coluna + stringLen;
                     break;
                 case 'A':
-                    j = i + 1;
-                    texto = carregaArquivo(input + j);
+                    j = i +1;
+                    carregaArquivo(input+j);
                     break;
                 case 'E':
                     j = i + 1;
@@ -265,21 +341,40 @@ void main() {
                 // case 'V':
                 //     inserePilha();
                 //     break;
-                // case 'C':
-                //     empilha();
-                //     break;
+                case 'C':
+                    empilha(M, coluna, linha, texto);
+                    M = -1;
+                    break;
                 // case 'X':
                 //     empilhaApaga();
                 //     break;
-                // case 'B':
-                //     strcpy(n, input+(i+1));
-                //     busca(s);
-                //     break;
-                // case 'S':
-                //       strcpy(n, input+(i+1));
-                //       strtok(s, '/')
-                //       substitui(s, r);
-                //     break;
+                case 'B':
+                    j = i + 1;
+
+                    int pos = busca(input+j, texto), k=0;
+
+                    coluna = -1;
+                    linha = 0;
+                    while (k<=pos) {
+                        if (texto[k] == '\n') {
+                            coluna = -2;
+                            linha++;
+                        }
+                        coluna++;
+                        k++;
+                    }
+                    break;
+                case 'S':
+                    j = i + 1;
+                    char delimiter[2] = "/";
+                    char *token1 =strtok(input+j, delimiter);
+                    char *token2 = strtok(NULL, delimiter);
+                    bool b=true;
+
+                    do {
+                        b = substitui(token1, token2);
+                    } while (b);
+                    break;
                 case 'N':
                     insereString(pulaLinha, linha, coluna, texto);
                     break;
@@ -303,9 +398,9 @@ void main() {
                         coluna = tamanhoDaLinha;
                     };
                     break;
-                // case 'Z':
-                //     exibePilha();
-                //     break;
+                case 'Z':
+                    exibePilha();
+                    break;
                 default:
                     break;
             }
