@@ -3,9 +3,46 @@
 #include <string.h>
 #include <stdbool.h>
 
-void insereString(char string[50]) {
+int imprimeLinha(char *texto, int linha, bool imprimir) {
+    int i = 0, j = 0, tamanhoDaLinha = -1;
+    while (texto[i] != EOF && j <= linha) {
+        if (texto[i] == '\n') {
+            j++;
+        }
+        if (j == linha) {
+            if (imprimir) {
+                putchar(texto[i]);
+            }
+            tamanhoDaLinha++;
+        }
+        i++;
+    }
+    putchar('\n');
 
+    return tamanhoDaLinha;
 }
+
+void insereString(char * string, int linha, int coluna, char * texto) {
+    char aux[200];
+    int i = 0, tamLinhas = coluna, tamString;
+
+    // retira \n da string
+    string[strlen(string)-1] = '\0';
+    
+    // calcula tamanho do texto até onde a string será inserida
+    while (i<linha) {
+        tamLinhas = tamLinhas + imprimeLinha(texto, linha, false);
+        i++;
+    }
+
+    aux[tamLinhas] = '\0';
+    strncpy(aux, texto, tamLinhas);
+    strcat(aux, string);
+    strcat(aux, texto + tamLinhas);
+    strcpy(texto, aux);
+}
+
+
 char * carregaArquivo(char * n) {
     int cont = 0;
     char c;
@@ -78,24 +115,7 @@ char * carregaArquivo(char * n) {
 
 // }
 
-int imprimeLinha(char *s, int linha, bool imprimir) {
-    int i = 0, j = 0, tamanhoDaLinha = -1;
-    while (s[i] != '\0' && j <= linha) {
-        if (s[i] == '\n') {
-            j++;
-        }
-        if (j == linha) {
-            if (imprimir) {
-                putchar(s[i]);
-            }
-            tamanhoDaLinha++;
-        }
-        i++;
-    }
-    putchar('\n');
 
-    return tamanhoDaLinha;
-}
 
 void imprimeCursor(int coluna) {
     int i=0;
@@ -111,8 +131,8 @@ void imprimeCursor(int coluna) {
 void main() {
 
     // criar variaveis
-    int linha = 0, coluna = 0, i = 0, x = 0, j = 0, tamanhoDaLinha;
-    char input[50], n[50], s[50], r[50];
+    int linha = 0, coluna = 0, i = 0, j = 0, tamanhoDaLinha, stringLen;
+    char input[50], s[50], r[50];
     char* texto, * token;
 
     // recebe os comandos e chama as funcoes correspondentes
@@ -126,9 +146,12 @@ void main() {
         i = 0;
         while (input[i]!='\0') {
             switch(input[i]){
-                // case 'I':
-                //     insereString(s);
-                //     break;
+                case 'I':
+                    j = i + 1;
+                    insereString(input + j, linha, coluna, texto);
+                    stringLen = strlen(input+j);
+                    coluna = coluna + stringLen;
+                    break;
                 case 'A':
                     j = i + 1;
                     texto = carregaArquivo(input + j);
@@ -159,8 +182,8 @@ void main() {
                 //     if (input[i+1]=='F') {
                 //         cursorFim();
                 //     } else {
-                //        strcpy(x, input+(i+1));
-                //         cursorLinha(x);
+                //        j = i + 1
+                //         cursorLinha(input + j);
                 //     }
                 //     break;
                 // case 'D':
@@ -184,7 +207,7 @@ void main() {
                 //     break;
                 // case 'S':
                 //       strcpy(n, input+(i+1));
-                // dividir a string em /
+                //       strtok(s, '/')
                 //       substitui(s, r);
                 //     break;
                 // case 'N':
