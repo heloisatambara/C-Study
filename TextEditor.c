@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 #define tamanhoPilha 10
-char * pilha[tamanhoPilha] = {0, 0, 0, 0, 0, 0, 0, 0, 0 ,0};
+char pilha[tamanhoPilha][200];
+
 char texto[200];
 int coluna = 0, linha = 0;
 
@@ -165,28 +166,20 @@ void apaga(int linha, int coluna, char * texto) {
 
 // }
 
-void empilha(int M, int coluna, int linha, char * texto) {
+void empilha(int M, int coluna, int linha, char * texto, int topo) {
     int i = 0;
     char stringMarcada[200];
     bool empilhado;
 
-    strncpy(stringMarcada, texto+(posicaoNaString(M, linha, texto)),(posicaoNaString(coluna, linha, texto)));
-
-    while (i<tamanhoPilha) {
-        if (!pilha[i]) {
-            pilha[i] = stringMarcada;
-
-            empilhado = true;
-            break;
-        } 
-        printf("%s\n", pilha[i]);
-        
-        i++;
+    strcpy(stringMarcada, texto + (posicaoNaString(M, linha, texto)));
+    stringMarcada[coluna-M] = '\0';
+    
+    if (topo < tamanhoPilha) {
+        strcpy(pilha[topo], stringMarcada);
+    } else {
+        printf("Pilha cheia");
     }
 
-    if (!empilhado) {
-        printf("A pilha esta cheia");
-    }
 }
 // void empilhaApaga() {
 
@@ -237,15 +230,12 @@ bool substitui(char * string1, char * string2) {
     return true;
 }
 
-void exibePilha() {
-    int i = 0;
+void exibePilha(int topo) {
+    int i = topo;
     
-    while (i<tamanhoPilha) {
-        if (pilha[i]) {
-            printf("%s\n", pilha[i]);
-        }
-        
-        i++;
+    while (i>=0) {
+        printf("%s\n", pilha[i]);
+        i--;
     }
 }
 
@@ -264,9 +254,10 @@ int quantasLinhas(char * texto) {
 
 
 void main() {
+    
 
     // criar variaveis
-    int i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1;
+    int i = 0, j = 0, tamanhoDaLinha, stringLen, M = -1, topo = 0;
     char input[50], r[50], pulaLinha[] = "\n ";
     char *token, *n;
 
@@ -338,16 +329,27 @@ void main() {
                 case 'M':
                     M = coluna;
                     break;
-                // case 'V':
-                //     inserePilha();
-                //     break;
+                case 'V':
+                    insereString(pilha[topo], linha, coluna, texto);
+                    topo--;
+                    break;
                 case 'C':
-                    empilha(M, coluna, linha, texto);
+                    empilha(M, coluna, linha, texto, topo);
+                    topo++;
                     M = -1;
                     break;
-                // case 'X':
-                //     empilhaApaga();
-                //     break;
+                case 'X':
+                    empilha(M, coluna, linha, texto, topo);
+                    topo++;
+                    int count = coluna-M;
+                    coluna = M;
+
+                    while (count!=0) {
+                        apaga(linha, coluna, texto);
+                        count--;
+                    }
+                    
+                    break;
                 case 'B':
                     j = i + 1;
 
@@ -399,7 +401,7 @@ void main() {
                     };
                     break;
                 case 'Z':
-                    exibePilha();
+                    exibePilha(topo);
                     break;
                 default:
                     break;
