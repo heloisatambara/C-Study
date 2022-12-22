@@ -10,7 +10,7 @@ int coluna = 0, linha = 0;
 
 int imprimeLinha(char *texto, int linha, bool imprimir) {
     int i = 0, j = 0, tamanhoDaLinha = -1;
-    while (texto[i] != EOF && j <= linha) {
+    while (texto[i] != '\0' && j <= linha) {
         if (texto[i] == '\n') {
             j++;
         }
@@ -162,9 +162,6 @@ void apaga(int linha, int coluna, char * texto) {
     strcpy(texto, aux);
 }
 
-// void inserePilha() {
-
-// }
 
 void empilha(int M, int coluna, int linha, char * texto, int topo) {
     int i = 0;
@@ -181,9 +178,7 @@ void empilha(int M, int coluna, int linha, char * texto, int topo) {
     }
 
 }
-// void empilhaApaga() {
 
-// }
 int busca(char * string, char * texto) {
     if (string[strlen(string)-1] == '\n') {
 
