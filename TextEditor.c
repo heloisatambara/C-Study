@@ -1,3 +1,14 @@
+// Versão com tamanho de texto fixo
+
+/* TO DO:
+- adaptar para inserção no começo e no final
+- o mesmo para deletar
+
+- fazer versão de tamanho dinâmico do texto
+  passar tudo para um novo vetor de tamanho adequado e atualizazr o ponteiro
+- fazer versão vom lista encadeada
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

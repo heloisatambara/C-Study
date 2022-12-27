@@ -1,5 +1,17 @@
 // exercicios da lista https://www.ime.usp.br/~macmulti/exercicios/inteiros/index.html
 
+/*
+ANOTACOES
+var = valor 
+*var = ponteiro dessa variavel
+&var = endereco dessa variavel
+
+para passar em funcoes, *var pode passar todo o vetor, caso var seja um vetor, pois *var aponta para var[0]
+&var passa o endereco da variável, de forma que a variavel será alterada pela funcao e não retornará ao seu valor original após chamada
+
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
