@@ -1,0 +1,12 @@
+Anotações para o relatorio do EP
+
+- dificuldade em saber o tamanho da string que virá do input e do texto 
+- buscas:
+ binaria nao tem sentido usar, pois texto não é ordenado
+- caracteres de inicio e final do arquivo
+- retornar um array numa funcao - static
+- nao permitir linhas e colunas negativas nem maiores que o máximo
+- memoria usada na insereString
+- malloc para pilhas
+- organizacao
+- marcar linhas diferentes
