@@ -5,22 +5,37 @@
 /*
     TO DO:
     - remove undesirable prints on choosing words parts;
-    - Add a configuration part to the menu: add words to the solo bank of words.
+    - treatment for composed words (with space key);
+    - Add a configuration part to the menu: add words to the solo bank of words, number of attempts;
+    - Draw hangman.
+*/
+/*
+  ---------
+ |        _|_
+ |       |o_o|
+ |         |
+ |        /|\
+ |         |
+ |        / \
+ |
+ |
 */
 
 /// @brief Creates the mask and shows the word chosen by the singlePlayer() function or typed in by the multiplayer user.
-void showWord(char *word) {
-    int i = 0, wordLength = strlen(word), maskLength = wordLength*2;
-    char mask[maskLength]; 
+char* showWord(char *word) {
+    int i = 0, wordLength = strlen(word);
+    char *mask;
+    mask = malloc(15*sizeof(char));
 
-    for (i=0; i<maskLength; i+=2) {
+    for (i=0; i<wordLength; i++) {
         mask[i] = '_';
-        mask[i+1] = ' ';
     }
+    mask[i]='\0';
 
-    printf("%s", mask);
+    return mask;
 
 }
+
 
 /// @brief For single player, shows options of themes that the word will belong to, and the function randomly chooses one from the bank of the chosen theme.
 void singlePlayer() {
@@ -52,6 +67,7 @@ void singlePlayer() {
         {
             char names[5][15] = {"Yasmin", "Katherine", "Annelise", "Alexander", "Hamilton"};
             printf("%s", names[index]);
+            word = names[index];
             break;
         }
 
@@ -59,6 +75,7 @@ void singlePlayer() {
         {
             char animals[5][15] = {"Crocodile", "Wolf", "Dolphin", "Hipoppotamus", "Rhino"};
             printf("%s", animals[index]);
+            word = animals[index];
             break;
         }
 
@@ -66,6 +83,7 @@ void singlePlayer() {
         {
             char colors[5][15] = {"Yellow", "Green", "White", "Black", "Blue"};
             printf("%s", colors[index]);
+            word = colors[index];
             break;
         }
 
@@ -73,7 +91,38 @@ void singlePlayer() {
             break;
     }
 
-    showWord(word);
+    // display game
+    int attempts = 10, count = 0, i=0;
+    char letters[26], guess[2], *maskedWord = showWord(word);
+    letters[0] = '\0';
+
+    while (strcmp(word, maskedWord) && count<=attempts) {
+        printf("\n\nNumber of attempts left: %d", attempts-count);
+        printf("\nWord: ");
+        for (i=0; i<=strlen(maskedWord);i++) {
+            printf("%c ", maskedWord[i]);
+        }
+        printf("\n\nLetters tried: ");
+        for (i=0; i<=strlen(letters);i++) {
+            printf("%c ", letters[i]);
+        }
+        printf("\n\nGuess a letter: ");
+        
+        setbuf(stdin, 0); // limpar buffer
+        fgets(guess, 2, stdin);
+
+        letters[count] = guess[0];
+        count++;
+        letters[count] = '\0';
+
+        for (i=0; i<=strlen(word); i++) {
+            if (guess[0] == word[i]) {
+                maskedWord[i] = guess[0];
+            }
+        }
+        
+    }
+    
 }
 
 /// @brief If the user chose to play, here they choose if it's a single or multi player.
@@ -113,6 +162,7 @@ void startMenu() {
         printf("\n3- Quit");
         printf("\nType your choice: ");
 
+        setbuf(stdin, 0); // limpar buffer
         scanf("%d", &option);
 
         // action corresponding to option chosen by use
