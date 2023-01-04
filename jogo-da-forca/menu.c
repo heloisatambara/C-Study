@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 /*
     TO DO:
     - remove undesirable prints on choosing words parts;
@@ -10,13 +11,13 @@
     - Draw hangman.
 */
 /*
-  ---------
- |        _|_
- |       |o_o|
- |         |
- |        /|\
- |         |
- |        / \
+  ----------¬
+ |       __ |
+ |      |:P|/
+ |       ̅ ̅ /|\
+ |        / | \
+ |         / \
+ |        /   \
  |
  |
 */
@@ -65,7 +66,7 @@ void singlePlayer() {
              
         case 2:
         {
-            char names[5][15] = {"Yasmin", "Katherine", "Annelise", "Alexander", "Hamilton"};
+            char names[5][15] = {"Yasmin", "Hermione", "Annelise", "Alexander", "Harry"};
             printf("%s", names[index]);
             word = names[index];
             break;
@@ -91,36 +92,89 @@ void singlePlayer() {
             break;
     }
 
-    // display game
+    // play game
     int attempts = 10, count = 0, i=0;
-    char letters[26], guess[2], *maskedWord = showWord(word);
+    char letters[26], guess[15], *maskedWord = showWord(word);
+    bool alreadyGuessed = false;
     letters[0] = '\0';
 
     while (strcmp(word, maskedWord) && count<=attempts) {
+        // display of attempts and current mask
         printf("\n\nNumber of attempts left: %d", attempts-count);
+
         printf("\nWord: ");
         for (i=0; i<=strlen(maskedWord);i++) {
             printf("%c ", maskedWord[i]);
         }
-        printf("\n\nLetters tried: ");
+
+        printf("\n\nLetters guessed: ");
         for (i=0; i<=strlen(letters);i++) {
             printf("%c ", letters[i]);
         }
-        printf("\n\nGuess a letter: ");
+
+        printf("\n\nGuess a letter or type 1 to guess a word: ");
         
-        setbuf(stdin, 0); // limpar buffer
+        setbuf(stdin, 0); // clean buffer
         fgets(guess, 2, stdin);
 
-        letters[count] = guess[0];
-        count++;
-        letters[count] = '\0';
+        // if player tries to guess word 
+        if (guess[0]=='1') {
+            printf("Type your word, choose wisely!\n>>> ");
+            setbuf(stdin, 0); // clean buffer
+            fgets(guess, 15, stdin);
 
-        for (i=0; i<=strlen(word); i++) {
-            if (guess[0] == word[i]) {
-                maskedWord[i] = guess[0];
+            for (i=0; i<=strlen(word); i++) {
+                maskedWord[i] = guess[i];
+            }
+            maskedWord[i-1] = '\0';
+
+            break;
+        }
+
+        printf("\e[1;1H\e[2J"); // clear screen
+
+        
+        alreadyGuessed = false;
+        for (i=0; i<=strlen(letters); i++) {
+            if (letters[i]==guess[0]) {
+                alreadyGuessed = true;
             }
         }
-        
+
+        if (!alreadyGuessed) {
+            // add letter to attempted letters and increment counter
+            letters[count] = guess[0];
+            count++;
+            letters[count] = '\0';
+
+            // change correct letters to the appropriate spaces in the mask
+            for (i=0; i<=strlen(word); i++) {
+                if (guess[0] == word[i]) {
+                    maskedWord[i] = guess[0];
+                }
+            }    
+        }
+       
+    }
+
+    // game over:
+    if (!strcmp(word, maskedWord)) {
+
+        printf("\n\nNumber of attempts left: %d", attempts-count);
+        printf("\nWord: ");
+
+        for (i=0; i<=strlen(maskedWord);i++) {
+
+            printf("%c ", maskedWord[i]);
+        }
+
+        printf("\n\n*************************\n*  Yaaaay! You got it!  *\n*************************");
+        getchar();
+        printf("\e[1;1H\e[2J"); // clean screen
+    } else {
+        printf("\n\nYou ran out of attempts! Better luck next time.");
+        getchar();
+        printf("\e[1;1H\e[2J"); // clean screen
     }
     
 }
@@ -156,7 +210,7 @@ void startMenu() {
     while (option < 3) {
         
         // selection menu
-        printf("Welcome to Hangman Game!");
+        printf("\nWelcome to Hangman Game!");
         printf("\n1- Play");
         printf("\n2- About");
         printf("\n3- Quit");
