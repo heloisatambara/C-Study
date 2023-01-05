@@ -22,6 +22,10 @@
  |
 */
 
+void drawHangman(){
+    char hangman[] = " ----------¬\n |       __ |\n |      |:P|/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |";
+    char hangman[] = " ----------¬\n |       __ |\n |      |:P|/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |";
+}
 /// @brief Creates the mask and shows the word chosen by the singlePlayer() function or typed in by the multiplayer user.
 char* showWord(char *word) {
     int i = 0, wordLength = strlen(word);
