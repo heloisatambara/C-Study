@@ -22,10 +22,9 @@
  |
 */
 
-void drawHangman(){
-    char hangman[] = " ----------¬\n |       __ |\n |      |:P|/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |";
-    char hangman[] = " ----------¬\n |       __ |\n |      |:P|/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |";
-}
+void drawHangman(){}
+
+
 /// @brief Creates the mask and shows the word chosen by the singlePlayer() function or typed in by the multiplayer user.
 char* showWord(char *word) {
     int i = 0, wordLength = strlen(word);
@@ -63,7 +62,6 @@ void singlePlayer() {
         { // here the brackets define a scope where the label "case 1" points to, so that the variable can be declared before anything else
             // because variables can't be defined right after labels, but in scopes there's no problem.
             char foods[5][15] = {"Avocado", "Hamburger", "Salad", "Cheescake", "Peanut butter"};
-            printf("%s\n\n", foods[index]);
             word = foods[index];
             break;
         }
@@ -71,7 +69,6 @@ void singlePlayer() {
         case 2:
         {
             char names[5][15] = {"Yasmin", "Hermione", "Annelise", "Alexander", "Harry"};
-            printf("%s", names[index]);
             word = names[index];
             break;
         }
@@ -79,7 +76,6 @@ void singlePlayer() {
         case 3:
         {
             char animals[5][15] = {"Crocodile", "Wolf", "Dolphin", "Hipoppotamus", "Rhino"};
-            printf("%s", animals[index]);
             word = animals[index];
             break;
         }
@@ -87,7 +83,6 @@ void singlePlayer() {
         case 4:
         {
             char colors[5][15] = {"Yellow", "Green", "White", "Black", "Blue"};
-            printf("%s", colors[index]);
             word = colors[index];
             break;
         }
@@ -97,13 +92,18 @@ void singlePlayer() {
     }
 
     // play game
+    printf("\e[1;1H\e[2J"); // clear screen
+
     int attempts = 10, count = 0, i=0;
-    char letters[26], guess[15], *maskedWord = showWord(word);
-    bool alreadyGuessed = false;
+    char letters[26], guess[15], *maskedWord = showWord(word), message[35] =  "Welcome to Hangman Game!\0";
+    bool alreadyGuessed = false, guessedRight = false;
     letters[0] = '\0';
 
     while (strcmp(word, maskedWord) && count<=attempts) {
+
         // display of attempts and current mask
+        printf("\n%s", message);
+        strcpy(message, "Welcome to Hangman Game!\0");
         printf("\n\nNumber of attempts left: %d", attempts-count);
 
         printf("\nWord: ");
@@ -121,6 +121,7 @@ void singlePlayer() {
         setbuf(stdin, 0); // clean buffer
         fgets(guess, 2, stdin);
 
+
         // if player tries to guess word 
         if (guess[0]=='1') {
             printf("Type your word, choose wisely!\n>>> ");
@@ -137,8 +138,9 @@ void singlePlayer() {
 
         printf("\e[1;1H\e[2J"); // clear screen
 
-        
+        // if player guesses letter
         alreadyGuessed = false;
+        guessedRight = false;
         for (i=0; i<=strlen(letters); i++) {
             if (letters[i]==guess[0]) {
                 alreadyGuessed = true;
@@ -154,15 +156,24 @@ void singlePlayer() {
             // change correct letters to the appropriate spaces in the mask
             for (i=0; i<=strlen(word); i++) {
                 if (guess[0] == word[i]) {
+                    strcpy(message, "Nice guess!\0");
+                    guessedRight = true;
                     maskedWord[i] = guess[0];
                 }
             }    
+        } else {
+            strcpy(message, "You've tried this letter before!\0");
         }
        
+       if (!guessedRight) {
+        strcpy(message, "Bad choice!");
+       }
+
     }
 
     // game over:
     if (!strcmp(word, maskedWord)) {
+        printf("\e[1;1H\e[2J"); // clear screen
 
         printf("\n\nNumber of attempts left: %d", attempts-count);
         printf("\nWord: ");
@@ -174,11 +185,12 @@ void singlePlayer() {
 
         printf("\n\n*************************\n*  Yaaaay! You got it!  *\n*************************");
         getchar();
-        printf("\e[1;1H\e[2J"); // clean screen
+        printf("\e[1;1H\e[2J"); // clear screen
     } else {
+        printf("\e[1;1H\e[2J"); // clear screen
         printf("\n\nYou ran out of attempts! Better luck next time.");
         getchar();
-        printf("\e[1;1H\e[2J"); // clean screen
+        printf("\e[1;1H\e[2J"); // clear screen
     }
     
 }
