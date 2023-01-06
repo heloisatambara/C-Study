@@ -3,7 +3,7 @@
 
 using namespace std;
 
-bool main() {
+int main() {
     // no C++, a função sempre deve ter um retorno - no caso int
     printf("It worked!");
     return 0;
