@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>     // for strcpy() and others
+#include <string.h>     // for strcpy(), strlen() and others
 #include <time.h>       // for generation of seed to use random
 #include <stdbool.h>    // for booleans
 #include <ctype.h>      // for toupper()
 
 /*
     TO DO:
-    - remove undesirable prints on choosing words parts;
-    - treatment for composed words (with space key);
     - Add a configuration part to the menu: add words to the solo bank of words, number of attempts;
     - Draw hangman.
 */
@@ -24,6 +22,7 @@
  |
 */
 
+/// @brief NOT IMPLEMENTED YET
 void drawHangman(){}
 
 
@@ -42,11 +41,11 @@ char* showWord(char *word) {
 
 }
 
-
-/// @brief For single player, shows options of themes that the word will belong to, and the function randomly chooses one from the bank of the chosen theme.
-void singlePlayer() {
-    int theme, index = rand() % 5;
+/// @brief For single player, prompts the user for theme options and returns a random word from the bank.
+char* getRandomWord() {
+    int theme, index = rand() % 5, i=0;
     char *word;
+    word = malloc(15*sizeof(char));
 
     // selection menu
     printf("\n\nChose theme:");
@@ -64,7 +63,11 @@ void singlePlayer() {
         { // here the brackets define a scope where the label "case 1" points to, so that the variable can be declared before anything else
             // because variables can't be defined right after labels, but in scopes there's no problem.
             char foods[5][15] = {"AVOCADO", "HAMBURGER", "SALAD", "CHEESCAKE", "PEANUT BUTTER"};
-            word = foods[index];
+            for (i=0;i < strlen(foods[index]);i++) {
+                word[i] = foods[index][i];
+            }
+            word[i] ='\0';
+
             break;
         }
              
@@ -93,10 +96,38 @@ void singlePlayer() {
             break;
     }
 
-    // play game
+
+
+    return word;
+}
+
+
+/// @brief Gets word from getRandomWord() or prompts the user for a word, that word will be masked with showWord() and the game begins.
+void play(int players) {
+    printf("\e[1;1H\e[2J"); // clear screen
+    
+    char word[50];
+    int i;
+
+    if (players==1) {
+        strcpy(word, getRandomWord());
+    } else {
+        printf("\nPLAYER 1");
+        printf("\nType a word for PLAYER 2 to guess");
+        printf("\n>>> ");
+
+        scanf("%s", word);
+
+        for (i=0; i<strlen(word); i++) {
+            word[i] = toupper(word[i]);
+        }
+        
+    }
+    
     printf("\e[1;1H\e[2J"); // clear screen
 
-    int attempts = 10, count = 0, i=0;
+    // play game
+    int attempts = 10, count = 0;
     char letters[26], guess[15], *maskedWord = showWord(word), message[35] =  "Welcome to Hangman Game!\0";
     bool alreadyGuessed = false, guessedRight = false;
     letters[0] = '\0';
@@ -104,6 +135,7 @@ void singlePlayer() {
     while (strcmp(word, maskedWord) && count<=attempts) {
 
         // display of attempts and current mask
+        if (players==2){printf("\nPLAYER 2");}
         printf("\n%s", message);
         strcpy(message, "Welcome to Hangman Game!\0");
         printf("\n\nNumber of attempts left: %d", attempts-count);
@@ -120,14 +152,14 @@ void singlePlayer() {
 
         printf("\n\nGuess a letter or type 1 to guess a word: ");
         
-        setbuf(stdin, 0); // clean buffer
+        setbuf(stdin, 0); // clear buffer
         fgets(guess, 2, stdin);
 
 
         // if player tries to guess word 
         if (guess[0]=='1') {
             printf("Type your word, choose wisely!\n>>> ");
-            setbuf(stdin, 0); // clean buffer
+            setbuf(stdin, 0); // clear buffer
             fgets(guess, 15, stdin);
 
             for (i=0; i<=strlen(word); i++) {
@@ -165,17 +197,19 @@ void singlePlayer() {
                     maskedWord[i] = guess[0];
                 }
             }    
+            if (!guessedRight) {
+                strcpy(message, "Bad choice!");
+            }
         } else {
             strcpy(message, "You've tried this letter before!\0");
         }
        
-       if (!guessedRight) {
-        strcpy(message, "Bad choice!");
-       }
+       
 
     }
 
     // game over:
+    setbuf(stdin, 0); // clear buffer
     if (!strcmp(word, maskedWord)) {
         printf("\e[1;1H\e[2J"); // clear screen
 
@@ -187,7 +221,7 @@ void singlePlayer() {
             printf("%c ", maskedWord[i]);
         }
 
-        printf("\n\n*************************\n*  Yaaaay! You got it!  *\n*************************");
+        printf("\n\n*************************\n*                       *\n*  Yaaaay! You got it!  *\n*                       *\n*************************");
         getchar();
         printf("\e[1;1H\e[2J"); // clear screen
     } else {
@@ -196,7 +230,10 @@ void singlePlayer() {
         getchar();
         printf("\e[1;1H\e[2J"); // clear screen
     }
-    
+ 
+ free(maskedWord);
+ free(word);
+
 }
 
 /// @brief If the user chose to play, here they choose if it's a single or multi player.
@@ -210,20 +247,13 @@ void chosePlayers() {
 
     scanf("%d", &players);
 
-    // action corresponding to option chosen by use
-    switch(players){
-        case 1:
-            singlePlayer();
-            break;
-        case 2:
-            // multiplayer();
-            break;
-        default:
-            break;
+    if (players==1 || players==2) {
+        play(players);
     }
+    
 }
 
-/// @brief Shows first options that the user can choose: play, see info about the game or quit. This loops until the user quits.
+/// @brief Shows the first options that the user can choose: play, see info about the game or quit. This loops until the user quits.
 void startMenu() {
     int option = 0;
 
@@ -236,19 +266,23 @@ void startMenu() {
         printf("\n3- Quit");
         printf("\nType your choice: ");
 
-        setbuf(stdin, 0); // limpar buffer
+        setbuf(stdin, 0); // clear buffer
         scanf("%d", &option);
 
         // action corresponding to option chosen by use
         switch(option){
-            case 1:
+            case 1: // play
                 chosePlayers();
                 break;
-            case 2:
+
+            case 2: // about
+                printf("\e[1;1H\e[2J"); // clear screen
+                setbuf(stdin, 0); // clear buffer
+                printf("Game developed for study in 2023\nBy Heloisa Tambara");
+                getchar();
                 break;
-            case 3:
-                break;
-            default:
+
+            default: // ignore
                 break;
         }
 
@@ -257,7 +291,7 @@ void startMenu() {
 }
 
 
-/// @brief Main function.
+/// @brief Main function: creates seed for random generations if needed and calls the startMenu().
 void main() {
     srand((unsigned) time(NULL)); // if user choses play solo, a random word will be chosen
 
