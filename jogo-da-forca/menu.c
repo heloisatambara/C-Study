@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <stdbool.h>
+#include <string.h>     // for strcpy() and others
+#include <time.h>       // for generation of seed to use random
+#include <stdbool.h>    // for booleans
+#include <ctype.h>      // for toupper()
+
 /*
     TO DO:
     - remove undesirable prints on choosing words parts;
@@ -14,7 +16,7 @@
   ----------¬
  |       __ |
  |      |:P|/
- |       ̅ ̅ /|\
+ |      ̅ ̅/|\
  |        / | \
  |         / \
  |        /   \
@@ -61,28 +63,28 @@ void singlePlayer() {
         case 1:
         { // here the brackets define a scope where the label "case 1" points to, so that the variable can be declared before anything else
             // because variables can't be defined right after labels, but in scopes there's no problem.
-            char foods[5][15] = {"Avocado", "Hamburger", "Salad", "Cheescake", "Peanut butter"};
+            char foods[5][15] = {"AVOCADO", "HAMBURGER", "SALAD", "CHEESCAKE", "PEANUT BUTTER"};
             word = foods[index];
             break;
         }
              
         case 2:
         {
-            char names[5][15] = {"Yasmin", "Hermione", "Annelise", "Alexander", "Harry"};
+            char names[5][15] = {"YASMIN", "HERMIONE", "ANNELISE", "ALEXANDER", "HARRY"};
             word = names[index];
             break;
         }
 
         case 3:
         {
-            char animals[5][15] = {"Crocodile", "Wolf", "Dolphin", "Hipoppotamus", "Rhino"};
+            char animals[5][15] = {"CROCODILE", "WOLF", "DOLPHIN", "HIPOPPOTAMUS", "RHINO"};
             word = animals[index];
             break;
         }
 
         case 4:
         {
-            char colors[5][15] = {"Yellow", "Green", "White", "Black", "Blue"};
+            char colors[5][15] = {"YELLOW", "GREEN", "WHITE", "BLACK", "BLUE"};
             word = colors[index];
             break;
         }
@@ -129,11 +131,13 @@ void singlePlayer() {
             fgets(guess, 15, stdin);
 
             for (i=0; i<=strlen(word); i++) {
-                maskedWord[i] = guess[i];
+                maskedWord[i] = toupper(guess[i]);
             }
             maskedWord[i-1] = '\0';
 
             break;
+        } else {
+            guess[0] = toupper(guess[0]);
         }
 
         printf("\e[1;1H\e[2J"); // clear screen
