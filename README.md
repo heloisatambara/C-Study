@@ -1,5 +1,5 @@
 # C-Study
-Most of this projects were developed in C instead of C++ for a better understanding of the language, but most codes could be simplified with minor changes, such as adding 
+Most of these projects were developed in C instead of C++ for a better understanding of the language, but most codes could be simplified with minor changes, such as adding 
 #include <iostream>
 #include <string>
 using namespace std
