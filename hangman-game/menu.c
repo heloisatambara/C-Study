@@ -15,7 +15,7 @@
   ----------¬
  |       __ |
  |      |:P|/
- |      ̅ ̅/|\
+ |         /|\
  |        / | \
  |         / \
  |        /   \
@@ -26,14 +26,14 @@
 /// @brief Draws the hangman 
 void drawHangman(int i){
     char hangman[8][120];
-    strcpy(hangman[7],"  ----------¬\n |       __ |\n |      |:P|/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |");
-    strcpy(hangman[6], "  ----------¬\n |       __ |\n |      |  |/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |");
-    strcpy(hangman[5], "  ----------¬\n |       __ |\n |      |  |/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |         /   \n |        /     \n |\n |");
-    strcpy(hangman[4], "  ----------¬\n |       __ |\n |      |  |/\n |       ̅ ̅ /|\\ \n |        / | \\ \n |           \n |              \n |\n |");
-    strcpy(hangman[3], "  ----------¬\n |       __ |\n |      |  |/\n |       ̅ ̅ /|  \n |        / |   \n |             \n |              \n |\n |");
-    strcpy(hangman[2], "  ----------¬\n |       __ |\n |      |  |/\n |       ̅ ̅  |  \n |          |   \n |             \n |              \n |\n |");
-    strcpy(hangman[1], "  ----------¬\n |       __ |\n |      |  |/\n |       \u0305 \u0305     \n |              \n |             \n |              \n |\n |");
-    strcpy(hangman[0], "  ----------¬\n |           \n |           \n |               \n |              \n |             \n |              \n |\n |");
+    strcpy(hangman[7], "  ---------- \n |       __ |\n |      |:P|/\n |       \u00AF\u00AF/|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |");
+    strcpy(hangman[6], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF/|\\ \n |        / | \\ \n |         / \\ \n |        /   \\ \n |\n |");
+    strcpy(hangman[5], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF/|\\ \n |        / | \\ \n |         /   \n |        /     \n |\n |");
+    strcpy(hangman[4], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF/|\\ \n |        / | \\ \n |           \n |              \n |\n |");
+    strcpy(hangman[3], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF/|  \n |        / |   \n |             \n |              \n |\n |");
+    strcpy(hangman[2], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF |  \n |          |   \n |             \n |              \n |\n |");
+    strcpy(hangman[1], "  ---------- \n |       __ |\n |      |  |/\n |       \u00AF\u00AF    \n |              \n |             \n |              \n |\n |");
+    strcpy(hangman[0], "  ---------- \n |           \n |           \n |               \n |              \n |             \n |              \n |\n |");
 
     printf("%s", hangman[i]);
 }
@@ -140,19 +140,19 @@ void play(int players) {
     printf("\e[1;1H\e[2J"); // clear screen
 
     // play game
-    int attempts = 8, count = 0;
+    int attempts = 7, count = 0, mistakes=0;
     char letters[26], guess[15], *maskedWord = showWord(word), message[35] =  "Welcome to Hangman Game!\0";
     bool alreadyGuessed = false, guessedRight = false;
     letters[0] = '\0';
 
-    while (strcmp(word, maskedWord) && count<=attempts) {
+    while (strcmp(word, maskedWord) && mistakes<=attempts) {
 
         // display of attempts and current mask
-        drawHangman(attempts-count);
+        drawHangman(mistakes);
         if (players==2){printf("\nPLAYER 2");}
         printf("\n%s", message);
         strcpy(message, "Welcome to Hangman Game!\0");
-        printf("\n\nNumber of attempts left: %d", attempts-count);
+        printf("\n\nNumber of attempts left: %d", attempts-mistakes);
 
         printf("\nWord: ");
         for (i=0; i<=strlen(maskedWord);i++) {
@@ -198,7 +198,7 @@ void play(int players) {
         }
 
         if (!alreadyGuessed) {
-            // add letter to attempted letters and increment counter
+            // add letter to attempted letters
             letters[count] = guess[0];
             count++;
             letters[count] = '\0';
@@ -213,6 +213,7 @@ void play(int players) {
             }    
             if (!guessedRight) {
                 strcpy(message, "Bad choice!");
+                mistakes++;
             }
         } else {
             strcpy(message, "You've tried this letter before!\0");
@@ -307,7 +308,7 @@ void startMenu() {
 
 /// @brief Main function: creates seed for random generations if needed and calls the startMenu().
 void main() {
-    setlocale(LC_ALL, ".UTF8");
+   // setlocale(LC_ALL, ".UTF8");
 
     srand((unsigned) time(NULL)); // if user choses play solo, a random word will be chosen
 
