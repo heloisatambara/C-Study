@@ -4,12 +4,10 @@
 #include <time.h>       // for generation of seed to use random
 #include <stdbool.h>    // for booleans
 #include <ctype.h>      // for toupper()
-#include <locale.h>     // for setlocale()
 
 /*
     TO DO:
     - Add a configuration part to the menu: add words to the solo bank of words, number of attempts;
-    - Draw hangman.
 */
 /*
   ----------¬
@@ -308,8 +306,6 @@ void startMenu() {
 
 /// @brief Main function: creates seed for random generations if needed and calls the startMenu().
 void main() {
-   // setlocale(LC_ALL, ".UTF8");
-
     srand((unsigned) time(NULL)); // if user choses play solo, a random word will be chosen
 
     startMenu(); // calls for the main menu
