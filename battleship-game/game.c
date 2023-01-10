@@ -9,7 +9,7 @@
     TO DO:
     - change scanf to fget;
     - configurations to change attempts and ships.
-
+    - version with points per kind of ship, ship length etc..
     
 */
 
@@ -17,7 +17,9 @@
 void showMask(wchar_t mask[10][10]) {
     int column, row;
 
+    printf("  1 2 3 4 5 6 7 8 9 10\n");
     for (row=0; row<10; row++) {
+        printf("%d ", row+1);
         for (column=0; column<10; column++) {
             printf("%c ", mask[row][column]);
         }
@@ -28,15 +30,15 @@ void showMask(wchar_t mask[10][10]) {
 
 /// @brief generates random positions to put ships.
 void positionShips(wchar_t board[10][10], int ships){
-    int randRow, randColumn, count=0;
+    int randRow, randColumn, points=0;
     
-    while (count<ships){
+    while (points<ships){
         randRow = rand() % 10;
         randColumn = rand() % 10;
 
         if (board[randRow][randColumn]=='~'){
             board[randRow][randColumn] = 4060;
-            count++;
+            points++;
         }
     }
     
@@ -46,7 +48,7 @@ void positionShips(wchar_t board[10][10], int ships){
 
 /// @brief generates the board and the mask, the ships and starts the loop of the game.
 void play() {
-    int column, row, ships=20, attempts=40;
+    int column, row, ships=20, attempts=50;
     wchar_t board[10][10], mask[10][10];
 
     // generate the board and the mask
@@ -63,9 +65,9 @@ void play() {
 
 
     // play
-    int rowInput, columnInput, count=0, shots=0;
+    int rowInput, columnInput, points=0, shots=0;
     char message[50] = "Welcome to Battleship!";
-    while (shots<attempts && count<ships) {
+    while (shots<attempts && points<ships) {
         // initialization
         printf("\e[1;1H\e[2J"); // clear screen
         setbuf(stdin, 0); // clear buffer
@@ -82,10 +84,10 @@ void play() {
         // unmasks the position
         mask[rowInput-1][columnInput-1] = board[rowInput-1][columnInput-1];
 
-        // increments counters 
+        // increments pointsers 
         if (board[rowInput-1][columnInput-1]==4060){
             strcpy(message,"Nice shot!");
-            count++;
+            points++;
         } else {
             strcpy(message,"Unlucky shot...");
         }
@@ -95,10 +97,10 @@ void play() {
 
     // game over
     printf("\e[1;1H\e[2J"); // clear screen
-    if (count==ships) {
-        printf("\nCongratulation! You won!");
+    if (points==ships) {
+        printf("\nCongratulations! You won!");
     } else {
-        printf("\nOh no! You ran out of shots. The enemy won!");
+        printf("\nOh no! You ran out of shots. You hit %d ships!n", points);
     }
 
 }
