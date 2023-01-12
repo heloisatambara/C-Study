@@ -21,7 +21,22 @@ void showMask(wchar_t mask[10][10]) {
     for (row=0; row<10; row++) {
         printf("%d ", row+1);
         for (column=0; column<10; column++) {
+            switch (mask[row][column]) {
+                case '~':
+                    printf("\033[1;97;44m"); // \033 changes font to parameters [effect;font-color;background-color;+m
+                    break;
+                case 4060:
+                    printf("\033[95;44m");
+                    break;
+                case '*':
+                    printf("\033[0m"); // [0m sets everything back to default
+                    break;
+                default:
+                    break;
+            }
+
             printf("%c ", mask[row][column]);
+            printf("\033[0m");
         }
         printf("\n");
     }
