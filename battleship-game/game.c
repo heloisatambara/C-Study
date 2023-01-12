@@ -17,9 +17,9 @@
 void showMask(wchar_t mask[10][10]) {
     int column, row;
 
-    printf("  1 2 3 4 5 6 7 8 9 10\n");
+    printf("   1 2 3 4 5 6 7 8 9 10\n");
     for (row=0; row<10; row++) {
-        printf("%d ", row+1);
+        printf("%-2d ", row+1);
         for (column=0; column<10; column++) {
             switch (mask[row][column]) {
                 case '~':
@@ -90,12 +90,16 @@ void play() {
         printf("\nYou have %d shots left.\n\n", attempts-shots);
         showMask(mask);
 
-        // ask for player interaction
-        printf("\nChoose row: ");
-        scanf("%d", &rowInput);
-        printf("\nChoose column: ");
-        scanf("%d", &columnInput);
-
+        // ask for player interaction - only accpets valid inputs
+        rowInput = -1;
+        columnInput = -1;
+        while (rowInput<1||rowInput>10||columnInput<1||columnInput>10){
+            printf("\nChoose row: ");
+            scanf("%d", &rowInput);
+            printf("\nChoose column: ");
+            scanf("%d", &columnInput);
+        }
+        
         // unmasks the position
         mask[rowInput-1][columnInput-1] = board[rowInput-1][columnInput-1];
 
