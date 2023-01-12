@@ -3,8 +3,30 @@
 #include <string.h>     // strcpy(), strlen() and others
 #include <stdbool.h>    // booleans
 
+/// @brief checks all winning possibilities and returns true if some of them checks.
+bool playerWon(char board[9]) {
+    if (board[0]==board[1] && board[1]== board[2]){ // row
+        return true;
+    } else if (board[3]==board[4] && board[4]==board[5]) { // row
+        return true;
+    } else if (board[6]==board[7] && board[7]==board[8]) { // row
+        return true;
+    } else if (board[0]==board[3] && board[3]==board[6]) { // column
+        return true;
+    } else if (board[1]==board[4] && board[4]==board[7]) { // column
+        return true;
+    } else if (board[2]==board[5] && board[5]==board[8]) { // column
+        return true;
+    } else if (board[0]==board[4] && board[4]==board[8]) { // diagonal
+        return true;
+    } else if (board[2]==board[4] && board[4]==board[6]) { // diagonal
+        return true;
+    } else {
+        return false;
+    }
+}
 
-
+/// @brief prints current board.
 void showBoard(char board[9]) {
     int i;
 
@@ -13,7 +35,7 @@ void showBoard(char board[9]) {
     for (i=0; i<9; i++) {
 
         // sets color to gray if the space wasn't used yet
-        if (board[i]=='-') {
+        if (board[i]!='X' && board[i]!='O') {
             printf("\033[90m");
         } else {
             printf("\033[1m");
@@ -25,12 +47,7 @@ void showBoard(char board[9]) {
         }
 
         // prints position or X/O
-        if (board[i]=='-'){
-            printf(" %d ", i+1);
-        } else {
-            printf(" %c ", board[i]);
-        }
-        
+        printf(" %c ", board[i]);
         printf("\033[0m");
 
         if ((i+1) % 3 == 0) {
@@ -44,9 +61,9 @@ void showBoard(char board[9]) {
 
 /// @brief generates the board and starts the loop of the game.
 void play() {
-    char board[] = "---------";
+    char board[] = "123456789";
     int position, count=0;
-    bool player1 = true;
+    bool player1 = true, tie = false;
 
     // play
     while (count<9) {
@@ -63,7 +80,7 @@ void play() {
         scanf("%d", &position); 
 
         // checks if position was already used
-        if (board[position-1]=='-'){
+        if (board[position-1]!='X' && board[position-1]!='O'){
             if (player1) {
                 board[position-1] = 'X';
             } else {
@@ -74,6 +91,12 @@ void play() {
 
             count++;   
         }
+
+        if (playerWon(board)) {
+            player1 = !player1;
+            tie = false;
+            break;
+        }
         
     }
 
@@ -82,6 +105,15 @@ void play() {
     setbuf(stdin, 0); // clear buffer
     showBoard(board);
     printf("\n\nGame over!");
+    if (tie) {
+        printf("\nIt's a tie!");
+    } else {
+        if (player1) {
+            printf("\nPlayer 1 won!");
+        } else {
+            printf("\nPlayer 2 won!");
+        }
+    }
     
     getchar();
 
