@@ -13,7 +13,7 @@ void showBoard(char board[9]) {
     for (i=0; i<9; i++) {
 
         // sets color to gray if the space wasn't used yet
-        if (board[i]!='O'&&board[i]!='X') {
+        if (board[i]=='-') {
             printf("\033[90m");
         } else {
             printf("\033[1m");
@@ -24,7 +24,13 @@ void showBoard(char board[9]) {
             printf("\033[4m");
         }
 
-        printf(" %c ", board[i]);
+        // prints position or X/O
+        if (board[i]=='-'){
+            printf(" %d ", i+1);
+        } else {
+            printf(" %c ", board[i]);
+        }
+        
         printf("\033[0m");
 
         if ((i+1) % 3 == 0) {
@@ -38,7 +44,7 @@ void showBoard(char board[9]) {
 
 /// @brief generates the board and starts the loop of the game.
 void play() {
-    char board[] = "123456789";
+    char board[] = "---------";
     int position, count=0;
     bool player1 = true;
 
@@ -57,7 +63,7 @@ void play() {
         scanf("%d", &position); 
 
         // checks if position was already used
-        if (board[position-1]!='X'&&board[position-1]!='O'){
+        if (board[position-1]=='-'){
             if (player1) {
                 board[position-1] = 'X';
             } else {
